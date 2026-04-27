@@ -1,0 +1,54 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: 'Outfit', sans-serif;
+}
+
+body {
+  @apply bg-dark-50 text-dark-900 antialiased;
+}
+
+/* Glassmorphism */
+.glass {
+  @apply bg-white/70 backdrop-blur-md border border-white/20;
+}
+
+.glass-dark {
+  @apply bg-dark-900/70 backdrop-blur-md border border-dark-800;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-dark-100;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-primary-300 rounded-full hover:bg-primary-400 transition-colors;
+}
+
+/* Card Hover Effects */
+.card-hover {
+  @apply transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary-500/20;
+}
+
+/* Gradient Text */
+.text-gradient {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-secondary-600;
+}
+
+/* Buttons */
+.btn-primary {
+  @apply px-6 py-3 bg-primary-600 text-white rounded-xl font-semibold shadow-lg shadow-primary-600/30 hover:bg-primary-700 hover:shadow-primary-700/40 transition-all active:scale-95;
+}
+
+.btn-secondary {
+  @apply px-6 py-3 bg-white text-primary-600 border-2 border-primary-100 rounded-xl font-semibold hover:bg-primary-50 transition-all active:scale-95;
+}
