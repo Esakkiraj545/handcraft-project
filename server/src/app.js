@@ -9,7 +9,19 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: ['https://handcraft-project.vercel.app', 'http://localhost:5173'],
+  origin: function (origin, callback) {
+    // allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    const allowedOrigins = ['http://localhost:5173'];
+    const isVercel = origin.endsWith('.vercel.app');
+    
+    if (allowedOrigins.indexOf(origin) !== -1 || isVercel) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
 app.use(express.json());
