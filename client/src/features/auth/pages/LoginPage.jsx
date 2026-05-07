@@ -19,7 +19,9 @@ const LoginPage = () => {
 
   useEffect(() => {
     if (userInfo) {
-      if (isSuccess) {
+      if (userInfo.role === 'admin') {
+        navigate('/admin/dashboard');
+      } else if (isSuccess) {
         setTimeout(() => {
           navigate('/');
         }, 1500);

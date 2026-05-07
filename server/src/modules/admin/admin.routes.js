@@ -5,10 +5,12 @@ const {
   getUserById,
   deleteUser,
   updateUser,
+  getDashboardStats,
 } = require('./admin.controller');
 const { protect } = require('../../middleware/auth.middleware');
 const { admin } = require('../../middleware/role.middleware');
 
+router.get('/stats', protect, admin, getDashboardStats);
 router.route('/users').get(protect, admin, getUsers);
 router
   .route('/users/:id')

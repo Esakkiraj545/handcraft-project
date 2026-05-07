@@ -1,4 +1,6 @@
 const User = require('../auth/auth.model');
+const Order = require('../order/order.model');
+const Product = require('../product/product.model');
 
 // @desc    Get all users
 // @route   GET /api/admin/users
@@ -82,9 +84,38 @@ const updateUser = async (req, res, next) => {
   }
 };
 
+// @desc    Get dashboard stats
+// @route   GET /api/admin/stats
+// @access  Private/Admin
+const getDashboardStats = async (req, res, next) => {
+  try {
+    const userCount = await User.countDocuments();
+    const productCount = await Product.countDocuments();
+    const orders = await Order.find({});
+    const orderCount = orders.length;
+    
+    const totalRevenue = orders.reduce((acc, order) => {
+      if (order.isPaid) {
+        return acc + order.totalPrice;
+      }
+      return acc;
+    }, 0);
+
+    res.json({
+      userCount,
+      productCount,
+      orderCount,
+      totalRevenue: totalRevenue.toFixed(2),
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getUsers,
   getUserById,
   deleteUser,
   updateUser,
+  getDashboardStats,
 };

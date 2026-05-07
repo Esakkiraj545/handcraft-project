@@ -19,6 +19,13 @@
 
   --font-serif: "Playfair Display", serif;
   --font-sans: "Inter", sans-serif;
+  --font-outfit: "Outfit", sans-serif;
+}
+
+.font-numeric {
+  font-family: 'Outfit', sans-serif;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
 }
 
 :root {
