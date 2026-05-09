@@ -19,11 +19,6 @@ const ProductListPage = () => {
   const [minRating, setMinRating] = useState(0);
   const [sortBy, setSortBy] = useState('featured');
 
-  useEffect(() => {
-    dispatch(getProducts());
-    fetchCategories();
-  }, [dispatch]);
-
   const fetchCategories = async () => {
     try {
       const response = await fetch('/api/categories');
@@ -35,6 +30,11 @@ const ProductListPage = () => {
       setDbCategories(['All', 'Studs', 'Jhumka', 'Hoops', 'Traditional', 'Modern', 'Necklace', 'Bangles']);
     }
   };
+
+  useEffect(() => {
+    dispatch(getProducts());
+    fetchCategories();
+  }, [dispatch]);
 
   const categories = dbCategories;
 

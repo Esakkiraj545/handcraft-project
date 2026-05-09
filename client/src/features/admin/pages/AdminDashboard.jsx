@@ -3,11 +3,11 @@ import {
   LayoutDashboard, ShoppingBag, Users, ListOrdered, Plus, Edit, Trash2, 
   TrendingUp, DollarSign, Package, X, Loader2, AlertTriangle, 
   ChevronRight, Calendar, ArrowUpRight, ArrowDownRight, Clock, Tag, Layers, SlidersHorizontal, Star, ShieldCheck,
-  BarChart3, FileText, Download, Filter, CreditCard, Undo2
+  BarChart3, Download, CreditCard, Undo2
 } from 'lucide-react';
 import { 
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, 
-  ResponsiveContainer, BarChart, Bar, Cell, PieChart, Pie, Legend
+  ResponsiveContainer, BarChart, Bar, Cell
 } from 'recharts';
 import api from '../../../lib/axios';
 
@@ -46,11 +46,6 @@ const AdminDashboard = () => {
     parentCategory: ''
   });
 
-  useEffect(() => {
-    fetchData();
-    setIsSidebarOpen(false); // Close sidebar on tab change (mobile)
-  }, [activeTab]);
-
   const fetchData = async () => {
     try {
       setLoading(true);
@@ -87,6 +82,11 @@ const AdminDashboard = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchData();
+    setIsSidebarOpen(false); // Close sidebar on tab change (mobile)
+  }, [activeTab]);
 
   // Product Actions
   const handleProductSubmit = async (e) => {
