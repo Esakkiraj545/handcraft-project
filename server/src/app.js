@@ -32,6 +32,7 @@ app.use('/api/auth', require('./modules/auth/auth.routes'));
 app.use('/api/products', require('./modules/product/product.routes'));
 app.use('/api/orders', require('./modules/order/order.routes'));
 app.use('/api/admin', require('./modules/admin/admin.routes'));
+app.use('/api/categories', require('./modules/category/category.routes'));
 app.use('/api/address', require('./modules/address/address.routes'));
 app.use('/api/notifications', require('./modules/notification/notification.routes'));
 

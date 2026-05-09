@@ -105,10 +105,58 @@ const deleteProduct = async (req, res, next) => {
   }
 };
 
+// @desc    Create new review
+// @route   POST /api/products/:id/reviews
+// @access  Private
+const createProductReview = async (req, res, next) => {
+  try {
+    const { rating, comment } = req.body;
+
+    const product = await Product.findById(req.params.id);
+
+    if (product) {
+      const alreadyReviewed = product.reviews.find(
+        (r) => r.user.toString() === req.user._id.toString()
+      );
+
+      if (alreadyReviewed) {
+        res.status(400);
+        throw new Error('Product already reviewed');
+      }
+
+      const review = {
+        name: req.user.name,
+        rating: Number(rating),
+        comment,
+        user: req.user._id,
+        isApproved: false, // Reviews need admin approval
+      };
+
+      product.reviews.push(review);
+
+      product.numReviews = product.reviews.length;
+
+      // Only calculate rating based on approved reviews (optional, but let's do all reviews for now or only approved)
+      // Actually, let's update rating only when approved? 
+      // For now, let's just update based on all reviews to simplify or wait for approval.
+      // Better: Update rating only based on approved reviews in a separate admin function.
+      
+      await product.save();
+      res.status(201).json({ message: 'Review added and pending approval' });
+    } else {
+      res.status(404);
+      throw new Error('Product not found');
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getProducts,
   getProductById,
   createProduct,
   updateProduct,
   deleteProduct,
+  createProductReview,
 };

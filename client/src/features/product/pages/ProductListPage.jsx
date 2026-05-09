@@ -11,6 +11,7 @@ const ProductListPage = () => {
   
   const [category, setCategory] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
+  const [dbCategories, setDbCategories] = useState([]);
   
   // New Filter States
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -20,9 +21,22 @@ const ProductListPage = () => {
 
   useEffect(() => {
     dispatch(getProducts());
+    fetchCategories();
   }, [dispatch]);
 
-  const categories = ['All', 'Studs', 'Jhumka', 'Hoops', 'Traditional', 'Modern', 'Necklace', 'Bangles'];
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch('/api/categories');
+      const data = await response.json();
+      setDbCategories(['All', ...data.map(c => c.name)]);
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+      // Fallback
+      setDbCategories(['All', 'Studs', 'Jhumka', 'Hoops', 'Traditional', 'Modern', 'Necklace', 'Bangles']);
+    }
+  };
+
+  const categories = dbCategories;
 
   const filteredProducts = products.filter(product => {
     const productName = product.name || '';

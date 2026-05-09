@@ -67,6 +67,18 @@ const orderSchema = new mongoose.Schema(
     deliveredAt: {
       type: Date,
     },
+    isRefunded: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+    refundAt: {
+      type: Date,
+    },
+    refundDetails: {
+      status: { type: String },
+      id: { type: String },
+    },
   },
   {
     timestamps: true,
