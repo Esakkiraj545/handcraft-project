@@ -106,7 +106,9 @@ const ProfilePage = () => {
 
                   <div className="text-left md:text-center space-y-1 md:space-y-2 md:mb-10 flex-grow">
                     <h2 className="text-xl md:text-2xl font-serif font-black text-[#1F1F1F] truncate max-w-[180px] md:max-w-none">{userInfo?.name}</h2>
-                    <p className="text-[8px] md:text-[10px] font-bold uppercase tracking-[0.2em] md:tracking-[0.3em] text-[#C5A059]">Artisan Member</p>
+                    <p className="text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.3em] text-[#C5A059]">
+                      {userInfo?.role === 'admin' ? 'Administrator' : 'Artisan Member'}
+                    </p>
                   </div>
                 </div>
 
