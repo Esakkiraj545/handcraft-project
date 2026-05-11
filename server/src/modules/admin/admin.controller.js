@@ -1,14 +1,34 @@
 const User = require('../auth/auth.model');
 const Order = require('../order/order.model');
 const Product = require('../product/product.model');
+const Address = require('../address/address.model');
 
 // @desc    Get all users
 // @route   GET /api/admin/users
 // @access  Private/Admin
 const getUsers = async (req, res, next) => {
   try {
-    const users = await User.find({});
-    res.json(users);
+    const users = await User.find({}).select('-password').sort({ createdAt: -1 }).lean();
+    
+    // Fetch default address for each user
+    const usersWithAddress = await Promise.all(
+      users.map(async (user) => {
+        const address = await Address.findOne({ user: user._id, isDefault: true });
+        return { 
+          ...user, 
+          address: address ? {
+            fullName: address.fullName,
+            phone: address.phone,
+            address: address.address,
+            city: address.city,
+            state: address.state,
+            pincode: address.pincode
+          } : null
+        };
+      })
+    );
+    
+    res.json(usersWithAddress);
   } catch (error) {
     next(error);
   }

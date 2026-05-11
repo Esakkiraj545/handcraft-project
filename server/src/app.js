@@ -13,7 +13,7 @@ app.use(cors({
     // allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
     
-    const allowedOrigins = ['http://localhost:5173'];
+    const allowedOrigins = ['http://localhost:5173', 'http://localhost:5174'];
     const isVercel = origin.endsWith('.vercel.app');
     
     if (allowedOrigins.indexOf(origin) !== -1 || isVercel) {

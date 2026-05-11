@@ -35,6 +35,7 @@ const AdminDashboard = () => {
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
   
   // Modals
   const [showProductModal, setShowProductModal] = useState(false);
@@ -99,6 +100,16 @@ const AdminDashboard = () => {
     fetchData();
     setIsSidebarOpen(false); // Close sidebar on tab change (mobile)
   }, [activeTab]);
+
+  useEffect(() => {
+    setCurrentPage(1); // Reset page on tab change
+  }, [activeTab]);
+
+  const itemsPerPage = 12;
+  const paginate = (data) => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return data.slice(startIndex, startIndex + itemsPerPage);
+  };
 
   // Product Actions
   const handleProductSubmit = async (e) => {
@@ -438,7 +449,7 @@ const AdminDashboard = () => {
                   </button>
                 </div>
                 <div className="p-6 space-y-3">
-                  {products.map(product => (
+                  {paginate(products).map(product => (
                     <div key={product._id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300">
                       <div className="flex items-center space-x-4">
                         <div className="w-14 h-14 rounded-xl bg-zinc-50 overflow-hidden shadow-inner flex-shrink-0">
@@ -515,12 +526,13 @@ const AdminDashboard = () => {
                     <thead>
                       <tr className="bg-zinc-50/20">
                         <th className="px-8 py-4 font-black text-zinc-400 uppercase text-[9px] tracking-widest">Details</th>
+                        <th className="px-8 py-4 font-black text-zinc-400 uppercase text-[9px] tracking-widest">Phone</th>
                         <th className="px-8 py-4 font-black text-zinc-400 uppercase text-[9px] tracking-widest">Role</th>
                         <th className="px-8 py-4 font-black text-zinc-400 uppercase text-[9px] tracking-widest text-right">Actions</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-zinc-50/30">
-                      {users.map((user) => (
+                      {paginate(users).map((user) => (
                         <tr key={user._id} className="hover:bg-zinc-50/5 transition-colors">
                           <td className="px-8 py-5">
                             <div className="flex items-center space-x-3">
@@ -530,6 +542,9 @@ const AdminDashboard = () => {
                                 <p className="text-zinc-400 text-[10px]">{user.email}</p>
                               </div>
                             </div>
+                          </td>
+                          <td className="px-8 py-5">
+                            <p className="text-xs font-bold text-brand-charcoal">{user.address?.phone || user.phone || 'N/A'}</p>
                           </td>
                           <td className="px-8 py-5 text-[8px] font-black uppercase tracking-widest">{user.role}</td>
                           <td className="px-8 py-5 text-right">
@@ -670,14 +685,21 @@ const AdminDashboard = () => {
                       <tr className="bg-zinc-50/20">
                         <th className="px-8 py-4 font-black text-zinc-400 uppercase text-[9px] tracking-widest">Order ID</th>
                         <th className="px-8 py-4 font-black text-zinc-400 uppercase text-[9px] tracking-widest">Customer</th>
+                        <th className="px-8 py-4 font-black text-zinc-400 uppercase text-[9px] tracking-widest">Shipping Address</th>
                         <th className="px-8 py-4 font-black text-zinc-400 uppercase text-[9px] tracking-widest text-right">Total</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-zinc-50/30">
-                      {orders.map((order) => (
+                      {paginate(orders).map((order) => (
                         <tr key={order._id} className="hover:bg-zinc-50/5 transition-colors">
                           <td className="px-8 py-5 font-numeric text-[11px] font-bold text-brand-charcoal">#{order._id.slice(-8).toUpperCase()}</td>
                           <td className="px-8 py-5 text-xs font-bold text-brand-charcoal">{order.user?.name || 'Guest'}</td>
+                          <td className="px-8 py-5">
+                            <div className="max-w-[200px] whitespace-normal">
+                              <p className="text-[10px] font-bold text-brand-charcoal truncate">{order.shippingAddress?.address}</p>
+                              <p className="text-zinc-400 text-[9px] font-black uppercase tracking-wider">{order.shippingAddress?.city} - {order.shippingAddress?.postalCode}</p>
+                            </div>
+                          </td>
                           <td className="px-8 py-5 text-right font-numeric text-[11px] font-black">₹{order.totalPrice.toLocaleString()}</td>
                         </tr>
                       ))}
@@ -777,13 +799,13 @@ const AdminDashboard = () => {
                         <th className="px-8 py-4 font-black text-zinc-400 uppercase text-[9px] tracking-widest text-right">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-zinc-50/30">
-                      {reviews.length === 0 ? (
-                        <tr>
-                          <td colSpan="4" className="px-8 py-12 text-center text-zinc-400 font-serif italic">No reviews found</td>
-                        </tr>
-                      ) : (
-                        reviews.map((review) => (
+                      <tbody className="divide-y divide-zinc-50/30">
+                        {reviews.length === 0 ? (
+                          <tr>
+                            <td colSpan="4" className="px-8 py-12 text-center text-zinc-400 font-serif italic">No reviews found</td>
+                          </tr>
+                        ) : (
+                          paginate(reviews).map((review) => (
                           <tr key={review._id} className="hover:bg-zinc-50/5 transition-colors">
                             <td className="px-8 py-5">
                               <p className="font-bold text-brand-charcoal text-xs">{review.productName}</p>
@@ -829,6 +851,36 @@ const AdminDashboard = () => {
               </div>
             )}
 
+            {/* Common Pagination Controls */}
+            {['products', 'orders', 'payments', 'reviews', 'users'].includes(activeTab) && (
+              <div className="flex items-center justify-between bg-white px-8 py-4 rounded-2xl shadow-sm border border-zinc-50 mt-8">
+                <div className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">
+                  Showing {(currentPage - 1) * itemsPerPage + 1} - {Math.min(currentPage * itemsPerPage, (activeTab === 'products' ? products.length : activeTab === 'orders' ? orders.length : activeTab === 'users' ? users.length : activeTab === 'payments' ? payments.length : reviews.length))} of {(activeTab === 'products' ? products.length : activeTab === 'orders' ? orders.length : activeTab === 'users' ? users.length : activeTab === 'payments' ? payments.length : reviews.length)}
+                </div>
+                <div className="flex space-x-2">
+                  <button 
+                    disabled={currentPage === 1}
+                    onClick={() => {
+                      setCurrentPage(prev => prev - 1);
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    className="px-4 py-2 bg-zinc-50 text-brand-charcoal text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-zinc-100 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                  >
+                    Previous
+                  </button>
+                  <button 
+                    disabled={currentPage * itemsPerPage >= (activeTab === 'products' ? products.length : activeTab === 'orders' ? orders.length : activeTab === 'users' ? users.length : activeTab === 'payments' ? payments.length : reviews.length)}
+                    onClick={() => {
+                      setCurrentPage(prev => prev + 1);
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    className="px-4 py-2 bg-brand-charcoal text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-zinc-800 disabled:opacity-30 disabled:cursor-not-allowed transition-all shadow-md"
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </main>

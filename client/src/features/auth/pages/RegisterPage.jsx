@@ -105,7 +105,7 @@ const RegisterPage = () => {
                     value={name}
                     onChange={onChange}
                     placeholder="John Doe"
-                    className="w-full bg-[#F9F6F0] border-none rounded-sm py-4 pl-12 pr-4 focus:ring-1 focus:ring-[#C5A059] outline-none text-sm transition-all"
+                    className="w-full bg-[#F9F6F0] border-none rounded-sm py-4 pl-12 pr-4 focus:ring-1 focus:ring-[#C5A059] outline-none text-sm transition-all placeholder:text-[#1F1F1F]/30"
                     required
                   />
                 </div>
@@ -121,7 +121,7 @@ const RegisterPage = () => {
                     value={phone}
                     onChange={onChange}
                     placeholder="+91 98765 43210"
-                    className="w-full bg-[#F9F6F0] border-none rounded-sm py-4 pl-12 pr-4 focus:ring-1 focus:ring-[#C5A059] outline-none text-sm transition-all"
+                    className="w-full bg-[#F9F6F0] border-none rounded-sm py-4 pl-12 pr-4 focus:ring-1 focus:ring-[#C5A059] outline-none text-sm transition-all placeholder:text-[#1F1F1F]/30"
                     required
                   />
                 </div>
@@ -138,7 +138,7 @@ const RegisterPage = () => {
                   value={email}
                   onChange={onChange}
                   placeholder="name@example.com"
-                  className="w-full bg-[#F9F6F0] border-none rounded-sm py-4 pl-12 pr-4 focus:ring-1 focus:ring-[#C5A059] outline-none text-sm transition-all"
+                  className="w-full bg-[#F9F6F0] border-none rounded-sm py-4 pl-12 pr-4 focus:ring-1 focus:ring-[#C5A059] outline-none text-sm transition-all placeholder:text-[#1F1F1F]/30"
                   required
                 />
               </div>
@@ -155,7 +155,7 @@ const RegisterPage = () => {
                     value={password}
                     onChange={onChange}
                     placeholder="••••••••"
-                    className="w-full bg-[#F9F6F0] border-none rounded-sm py-4 pl-12 pr-12 focus:ring-1 focus:ring-[#C5A059] outline-none text-sm transition-all"
+                    className="w-full bg-[#F9F6F0] border-none rounded-sm py-4 pl-12 pr-12 focus:ring-1 focus:ring-[#C5A059] outline-none text-sm transition-all placeholder:text-[#1F1F1F]/30"
                     required
                   />
                   <button 
@@ -178,7 +178,7 @@ const RegisterPage = () => {
                     value={confirmPassword}
                     onChange={onChange}
                     placeholder="••••••••"
-                    className="w-full bg-[#F9F6F0] border-none rounded-sm py-4 pl-12 pr-12 focus:ring-1 focus:ring-[#C5A059] outline-none text-sm transition-all"
+                    className="w-full bg-[#F9F6F0] border-none rounded-sm py-4 pl-12 pr-12 focus:ring-1 focus:ring-[#C5A059] outline-none text-sm transition-all placeholder:text-[#1F1F1F]/30"
                     required
                   />
                   <button 

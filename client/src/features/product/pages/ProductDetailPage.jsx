@@ -264,12 +264,12 @@ const ProductDetailPage = () => {
 
             {/* Review List */}
             <div className="lg:col-span-2 space-y-6">
-              {product?.reviews?.filter(r => r.isApproved).length === 0 ? (
+              {product?.reviews?.length === 0 ? (
                 <div className="text-center py-20 bg-white rounded-3xl border border-[#EFE9DF] border-dashed">
                    <p className="text-[#1F1F1F]/40 font-serif italic">No reviews yet. Be the first to share your thoughts.</p>
                 </div>
               ) : (
-                product?.reviews?.filter(r => r.isApproved).map((rev) => (
+                product?.reviews?.map((rev) => (
                   <div key={rev._id} className="bg-white p-8 rounded-3xl border border-[#EFE9DF] shadow-sm hover:shadow-md transition-all">
                     <div className="flex justify-between items-start mb-4">
                       <div>
