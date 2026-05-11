@@ -11,6 +11,18 @@ import {
 } from 'recharts';
 import api from '../../../lib/axios';
 
+const CustomTooltip = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-white p-4 shadow-2xl rounded-xl border border-zinc-100">
+        <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-1">{label}</p>
+        <p className="text-sm font-black text-brand-charcoal">₹{payload[0].value.toLocaleString()}</p>
+      </div>
+    );
+  }
+  return null;
+};
+
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [stats, setStats] = useState(null);
@@ -221,17 +233,6 @@ const AdminDashboard = () => {
 
   const COLORS = ['#10b981', '#3b82f6', '#6366f1', '#f59e0b', '#ef4444', '#8b5cf6'];
 
-  const CustomTooltip = ({ active, payload, label }) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="bg-white p-4 shadow-2xl rounded-xl border border-zinc-100">
-          <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-1">{label}</p>
-          <p className="text-sm font-black text-brand-charcoal">₹{payload[0].value.toLocaleString()}</p>
-        </div>
-      );
-    }
-    return null;
-  };
 
   return (
     <div className="flex min-h-screen bg-[#fafafa]">
@@ -271,23 +272,26 @@ const AdminDashboard = () => {
               { id: 'reports', label: 'Reports', icon: BarChart3 },
               { id: 'reviews', label: 'Reviews', icon: Star },
               { id: 'users', label: 'Customers', icon: Users },
-            ].map(tab => (
-              <button
-                key={tab.id}
-                onClick={() => {
-                  setActiveTab(tab.id);
-                  setIsSidebarOpen(false);
-                }}
-                className={`flex items-center space-x-3 w-full p-3 rounded-xl font-bold transition-all duration-200 ${
-                  activeTab === tab.id 
-                  ? 'bg-brand-charcoal text-white shadow-lg' 
-                  : 'text-zinc-500 hover:bg-zinc-50 hover:text-brand-charcoal'
-                }`}
-              >
-                <tab.icon size={18} />
-                <span className="text-xs uppercase tracking-widest font-black">{tab.label}</span>
-              </button>
-            ))}
+            ].map(tab => {
+              const Icon = tab.icon;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => {
+                    setActiveTab(tab.id);
+                    setIsSidebarOpen(false);
+                  }}
+                  className={`flex items-center space-x-3 w-full p-3 rounded-xl font-bold transition-all duration-200 ${
+                    activeTab === tab.id 
+                    ? 'bg-brand-charcoal text-white shadow-lg' 
+                    : 'text-zinc-500 hover:bg-zinc-50 hover:text-brand-charcoal'
+                  }`}
+                >
+                  <Icon size={18} />
+                  <span className="text-xs uppercase tracking-widest font-black">{tab.label}</span>
+                </button>
+              );
+            })}
           </nav>
 
           <div className="pt-6">
@@ -346,20 +350,23 @@ const AdminDashboard = () => {
 
                 {/* Stats Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
-                  {dashboardStats.map((stat, i) => (
-                    <div key={i} className="bg-white p-6 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 group">
-                      <div className="flex items-center justify-between mb-4">
-                        <div className={`${stat.bg} ${stat.color} w-10 h-10 rounded-xl flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform`}>
-                          <stat.icon size={18} />
+                  {dashboardStats.map((stat, i) => {
+                    const Icon = stat.icon;
+                    return (
+                      <div key={i} className="bg-white p-6 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 group">
+                        <div className="flex items-center justify-between mb-4">
+                          <div className={`${stat.bg} ${stat.color} w-10 h-10 rounded-xl flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform`}>
+                            <Icon size={18} />
+                          </div>
+                          <div className={`text-[9px] font-black px-2 py-0.5 rounded-lg ${stat.trendUp ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'}`}>
+                            {stat.trend}
+                          </div>
                         </div>
-                        <div className={`text-[9px] font-black px-2 py-0.5 rounded-lg ${stat.trendUp ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'}`}>
-                          {stat.trend}
-                        </div>
+                        <p className="text-zinc-400 text-[10px] font-black uppercase tracking-widest mb-0.5">{stat.label}</p>
+                        <h4 className="text-xl font-black text-brand-charcoal font-numeric">{stat.value}</h4>
                       </div>
-                      <p className="text-zinc-400 text-[10px] font-black uppercase tracking-widest mb-0.5">{stat.label}</p>
-                      <h4 className="text-xl font-black text-brand-charcoal font-numeric">{stat.value}</h4>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
 
                 {/* Charts */}
@@ -563,7 +570,7 @@ const AdminDashboard = () => {
                   </div>
                   <div className="h-[300px] w-full">
                     <ResponsiveContainer width="100%" height="100%">
-                      <AreaChart data={reportsData.dailyReport}>
+                      <AreaChart data={reportsData?.dailyReport || []}>
                         <defs>
                           <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
                             <stop offset="5%" stopColor="#10b981" stopOpacity={0.1}/>
@@ -586,13 +593,13 @@ const AdminDashboard = () => {
                     <h4 className="text-sm font-black text-brand-charcoal uppercase tracking-widest mb-8">Category Revenue</h4>
                     <div className="h-[300px]">
                       <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={reportsData.categoryReport} layout="vertical">
+                        <BarChart data={reportsData?.categoryReport || []} layout="vertical">
                           <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f1f1f1" />
                           <XAxis type="number" hide />
                           <YAxis dataKey="category" type="category" axisLine={false} tickLine={false} tick={{fontSize: 9, fontWeight: 800, fill: '#1F1F1F'}} width={80} />
                           <Tooltip cursor={{fill: 'transparent'}} />
                           <Bar dataKey="revenue" radius={[0, 4, 4, 0]}>
-                            {reportsData.categoryReport.map((entry, index) => (
+                            {(reportsData?.categoryReport || []).map((entry, index) => (
                               <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                             ))}
                           </Bar>
@@ -634,7 +641,7 @@ const AdminDashboard = () => {
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-zinc-50/30">
-                        {reportsData.productReport.map((prod, idx) => (
+                        {(reportsData?.productReport || []).map((prod, idx) => (
                           <tr key={idx} className="hover:bg-zinc-50/5 transition-colors">
                             <td className="px-8 py-5">
                               <p className="font-bold text-brand-charcoal text-xs">{prod.name}</p>
